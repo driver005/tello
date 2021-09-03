@@ -12,6 +12,18 @@ from torchvision import transforms
 import time
 
 
+def distance(co1, co2):
+    return cv2.sqrt(pow(abs(co1[0] - co2[0]), 2) + pow(abs(co1[1] - co2[2]), 2))
+
+
+def closest_coord(list, coord):
+    closest = list[0]
+    for c in list:
+        if distance(c, coord) < distance(closest, coord):
+            closest = c
+    return closest
+
+
 def find_nearest(array, value):
     array = np.asarray(array)
     idx = (np.abs(array - value)).argmin()
@@ -98,6 +110,7 @@ while True:
     print(max)
 
     if(max > 0.4):
+        # print(disp_resized_np.argmin(numberofvalues=10))
 
         step_size = 25
         size = 50
@@ -127,28 +140,9 @@ while True:
             middleX = original_width / 2
             middleY = original_height / 2
 
-            differences = []
-
-            for cube in passed_cubes:
-                total_difference = 0
-                if(cube[0] > middleX and cube[1] > middleY):
-                    total_difference = (
-                        cube[0] - middleX) + (cube[1] + middleY)
-                if(cube[0] < middleX and cube[1] > middleY):
-                    total_difference = (
-                        middleX - cube[0]) + (cube[1] + middleY)
-                if(cube[0] < middleX and cube[1] < middleY):
-                    total_difference = (
-                        middleX - cube[0]) + (middleY + cube[1])
-                if(cube[0] > middleX and cube[1] < middleY):
-                    total_difference = (
-                        cube[0] - middleX) + (middleY + cube[1])
-                differences.append(total_difference)
-
-            min_varieation_idx = np.min(differences)
-
-            # least_variation = find_nearest(passed_cubes, (middleX, middleY))
-            least_variation = passed_cubes[min_varieation_idx]
+            least_variation = min(passed_cubes, key=lambda point: (
+                point[0] - middleX)**2 + (point[1] - middleY)**2)
+            print(least_variation)
 
             image = cv2.rectangle(
                 disp_resized_np,
