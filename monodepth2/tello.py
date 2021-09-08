@@ -10,7 +10,7 @@ import networks
 import torch
 from torchvision import transforms
 import time
-
+#from utils import download_model_if_doesnt_exist
 
 def distance(co1, co2):
     return cv2.sqrt(pow(abs(co1[0] - co2[0]), 2) + pow(abs(co1[1] - co2[2]), 2))
@@ -31,7 +31,7 @@ def find_nearest(array, value):
 
 
 model_name = "mono_640x192"
-
+#download_model_if_doesnt_exist(model_name)
 encoder_path = os.path.join("models", model_name, "encoder.pth")
 depth_decoder_path = os.path.join("models", model_name, "depth.pth")
 
@@ -60,6 +60,8 @@ tello.streamon()
 
 tello.takeoff()
 tello.send_rc_control(0, 0, 0, 0)
+
+time.sleep(2)
 
 while True:
     input_image = tello.get_frame_read().frame  # cam.read()  ret,
@@ -156,11 +158,19 @@ while True:
 
             print(least_variation)
 
-            tello.send_rc_control(0, 0, 0, 0)
+            throtle = 0
+            roll = 0
 
-            time.sleep(3)
+            if (middleX > least_variation[0]):
+                roll = -30
+            else:
+                roll = 30
+            if (middleY < least_variation[1]):
+                throtle = -30
+            else:
+                throtle = 30
 
-            tello.land()
+            tello.send_rc_control(roll, 0, throtle, 0)
 
             # for()
         # tello.send_rc_control(0, -20, 0, 0)
