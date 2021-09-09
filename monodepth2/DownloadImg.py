@@ -70,5 +70,5 @@ def main(url, path):
         # for each image, download it
         download(img, path)
 
-for i in range(1, 40, 1):
-    main("http://www.leidorf.de/index.php?option=com_zoom&Itemid=26&catid=12&PageNo=" + str(i), "C:/Users/steffen/WebImg")
+for i in range(1, 261, 1):
+    main("http://www.leidorf.de/index.php?option=com_zoom&Itemid=26&catid=7&PageNo=" + str(i), "C:/Users/steffen/LuftbildarchiologieNegativ")
